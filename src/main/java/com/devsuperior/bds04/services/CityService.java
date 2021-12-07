@@ -19,8 +19,22 @@ public class CityService {
 	
 	@Transactional(readOnly = true)
 	public List<CityDTO> findAll(){
-		List<City> list = cityRepository.findAll();	
+		List<City> list = cityRepository.findAllByOrderByNameAsc();	
 		return list.stream().map(city -> new CityDTO(city)).collect(Collectors.toList());
+	}
+
+	@Transactional
+	public CityDTO insert(CityDTO dto) {
+		City city = dtoToEntity(dto);
+		city = cityRepository.save(city);
+		return new CityDTO(city);
+	}
+
+	private City dtoToEntity(CityDTO dto) {
+		City city = new City();
+		city.setId(null);
+		city.setName(dto.getName());
+		return city;
 	}
 
 }
